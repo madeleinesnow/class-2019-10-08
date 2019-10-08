@@ -1,0 +1,64 @@
+---
+title: "Dice"
+author: "Madeleine Snow"
+date: "10/8/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+
+library(tidyverse)
+
+```
+
+```{r rollonce, include = FALSE}
+
+dice <- function() {
+  sample(1:6, 1)
+  }
+
+```
+
+```{r rolltwice, include=FALSE}
+
+roll_twice <- function() {
+  dice() + dice()
+  }
+
+```
+
+```{r vector1, include=FALSE}
+
+roll_dice_notusing <- function(n = 1){
+  dice() + dice()
+  
+results <- vector(mode = "integer", length = n)
+
+for(i in 1:n){
+  results[i] <- dice() + dice()
+}
+return(results)
+
+}
+
+```
+
+```{r vector2, include=FALSE}
+
+roll_dice <- function(n = 1){
+  
+map_int(1:n, ~ dice() + dice())
+  
+}
+
+```
+
+```{r histogram, include=TRUE}
+
+data <- tibble(rolls = roll_dice(1000))
+
+ggplot(data, aes(x = rolls)) +
+  geom_histogram()
+
+```
