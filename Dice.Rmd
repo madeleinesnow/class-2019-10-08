@@ -14,8 +14,10 @@ library(tidyverse)
 
 ```{r rollonce, include = FALSE}
 
-dice <- function() {
-  sample(1:6, 1)
+dice <- function(n) {
+ x <- sample(1:6, 1)
+  
+  return(x)
   }
 
 ```
@@ -46,7 +48,7 @@ return(results)
 
 ```{r vector2, include=FALSE}
 
-roll_dice <- function(n = 1){
+roll_dice <- function(n){
   
 map_int(1:n, ~ dice() + dice())
   
@@ -54,11 +56,31 @@ map_int(1:n, ~ dice() + dice())
 
 ```
 
-```{r histogram, include=TRUE}
+```{r histogram, include=TRUE,echo=FALSE, warning=FALSE}
 
 data <- tibble(rolls = roll_dice(1000))
 
 ggplot(data, aes(x = rolls)) +
   geom_histogram()
+
+```
+
+```{r prob7and11, include=FALSE}
+
+x <- tibble(rolls = roll_dice(10000))
+
+x %>% mutate(include_7_or_11 = ifelse(rolls %in% c(7,11), TRUE, FALSE)) %>% 
+summarise(prop = sum(include_7_or_11)/n())
+
+```
+
+```{r listcolumns, include=FALSE}
+
+# # of throws 1:100, three throws of dice
+
+x <- tibble(replication = 1:100,
+            throws = map(replication, ~ roll_dice(n = 3))) %>% 
+  mutate(all_winners = ifelse(7 %in% unlist(throws), TRUE, FALSE))
+
 
 ```
